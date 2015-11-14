@@ -223,7 +223,11 @@
                             <jar>${project.artifactId}-${project.version}.jar</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <!--<errTitle>TODO</errTitle>-->
-                            <!--<icon>src/main/icons/1435621016_cards.ico</icon>-->
+                            <icon>src/main/icons/1447536660_Application.ico</icon>
+                            <icon>src/main/icons/1447536718_Application.ico</icon>
+                            <icon>src/main/icons/1447536726_Application.ico</icon>
+                            <icon>src/main/icons/1447536731_Application.ico</icon>
+                            <icon>src/main/icons/1447536735_Application.ico</icon>
                             <classPath>
                                 <mainClass>com.github.hronom.scrape.dat.website.ScrapeDatWebsiteApp</mainClass>
                                 <addDependencies>true</addDependencies>
