@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.Executors;
 
 public class ScrapeButtonController {
     private static final Logger logger = LogManager.getLogger();
@@ -47,41 +48,49 @@ public class ScrapeButtonController {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                scrapeView.setScrapeButtonEnabled(false);
-                try {
-                    scrapeView.setOutput("");
+                Executors.newSingleThreadExecutor().submit(new Runnable() {
+                    public void run() {
+                        scrapeView.setWebsiteUrlTextFieldEnabled(false);
+                        scrapeView.setSelectorTextFieldEnabled(false);
+                        scrapeView.setScrapeButtonEnabled(false);
+                        scrapeView.setWorkInProgress(true);
+                        try {
+                            scrapeView.setOutput("");
 
-                    URL url = new URL(scrapeView.getWebsiteUrl());
-                    HtmlPage page = webClient.getPage(url);
+                            URL url = new URL(scrapeView.getWebsiteUrl());
+                            HtmlPage page = webClient.getPage(url);
 
-                    webClient.waitForBackgroundJavaScript(10000);
+                            String xml = page.asXml();
 
-                    String xml = page.asXml();
+                            String selector = scrapeView.getSelector();
+                            if (!xml.isEmpty() && !selector.isEmpty()) {
+                                Document doc = Jsoup.parse(xml);
+                                Elements selectedElements = doc.select(selector);
+                                if (!selectedElements.isEmpty()) {
+                                    StringBuilder sb = new StringBuilder();
 
-                    String selector = scrapeView.getSelector();
-                    if (!xml.isEmpty() && !selector.isEmpty()) {
-                        Document doc = Jsoup.parse(xml);
-                        Elements selectedElements = doc.select(selector);
-                        if (!selectedElements.isEmpty()) {
-                            StringBuilder sb = new StringBuilder();
+                                    for (Element element : selectedElements) {
+                                        String body = element.html();
+                                        sb.append(body);
+                                        sb.append("\n");
+                                        sb.append("\n");
+                                    }
 
-                            for (Element element : selectedElements) {
-                                String body = element.html();
-                                sb.append(body);
-                                sb.append("\n");
-                                sb.append("\n");
+                                    scrapeView.setOutput(sb.toString());
+                                }
                             }
-
-                            scrapeView.setOutput(sb.toString());
+                        } catch (IOException e) {
+                            logger.error(e);
                         }
+
+                        webClient.close();
+
+                        scrapeView.setWorkInProgress(false);
+                        scrapeView.setScrapeButtonEnabled(true);
+                        scrapeView.setSelectorTextFieldEnabled(true);
+                        scrapeView.setWebsiteUrlTextFieldEnabled(true);
                     }
-                } catch (IOException e) {
-                    logger.error(e);
-                }
-
-                webClient.close();
-
-                scrapeView.setScrapeButtonEnabled(true);
+                });
             }
         };
     }
