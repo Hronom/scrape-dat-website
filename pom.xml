@@ -13,6 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <argLine>-Xmx10G</argLine>
     </properties>
 
     <prerequisites>
@@ -284,6 +285,7 @@
                 <version>2.19</version>
                 <configuration>
                     <workingDirectory>${project.basedir}/bin</workingDirectory>
+                    <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
 
@@ -304,7 +306,7 @@
                 <configuration>
                     <workingDirectory>${project.basedir}/bin</workingDirectory>
                     <encoding>UTF-8</encoding>
-                    <argLine>-Xmx10g</argLine>
+                    <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
 
