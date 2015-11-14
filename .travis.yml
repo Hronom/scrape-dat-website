@@ -26,7 +26,7 @@ deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file:
-       - "scrape-dat-website/dist/scrape-dat-website-$APP_VERSION-bin.zip"
+       - "dist/scrape-dat-website-$APP_VERSION-bin.zip"
   skip_cleanup: true
   on:
     tags: true
