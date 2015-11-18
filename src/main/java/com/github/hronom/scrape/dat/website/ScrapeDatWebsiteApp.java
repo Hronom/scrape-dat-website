@@ -14,6 +14,38 @@ public class ScrapeDatWebsiteApp {
 
     public static void main(String[] args) {
         logger.info(ScrapeDatWebsiteApp.class.getSimpleName());
+        printSystemInfo();
+
+        ScrapeView scrapeView = new ScrapeView();
+        new ScrapeButtonController(scrapeView);
+        new ScrapeMainView(scrapeView);
+    }
+
+    private static void printSystemInfo() {
+        logger.info("Java version: " + System.getProperty("java.version"));
+        logger.info("Java vendor: " + System.getProperty("java.vendor"));
+        logger.info("Java vendor url: " + System.getProperty("java.vendor.url"));
+        logger.info("Java home: " + System.getProperty("java.home"));
+        logger.info("Java vm specification version: " + System.getProperty("java.vm.specification.version"));
+        logger.info("Java vm specification vendor: " + System.getProperty("java.vm.specification.vendor"));
+        logger.info("Java vm specification name: " + System.getProperty("java.vm.specification.name"));
+        logger.info("Java vm version: " + System.getProperty("java.vm.version"));
+        logger.info("Java vm vendor: " + System.getProperty("java.vm.vendor"));
+        logger.info("Java vm name: " + System.getProperty("java.vm.name"));
+        logger.info("Java specification version: " + System.getProperty("java.specification.version"));
+        logger.info("Java specification vendor: " + System.getProperty("java.specification.vendor"));
+        logger.info("Java specification name: " + System.getProperty("java.specification.name"));
+        logger.info("Java class.version: " + System.getProperty("java.class.version"));
+        logger.info("Java class.path: " + System.getProperty("java.class.path"));
+        logger.info("Java library.path: " + System.getProperty("java.library.path"));
+        logger.info("Java io.tmpdir: " + System.getProperty("java.io.tmpdir"));
+        logger.info("Java compiler: " + System.getProperty("java.compiler"));
+        logger.info("Java ext.dirs: " + System.getProperty("java.ext.dirs"));
+        logger.info("OS name: " + System.getProperty("os.name"));
+        logger.info("OS arch: " + System.getProperty("os.arch"));
+        logger.info("OS version: " + System.getProperty("os.version"));
+
+
         // Total number of processors or cores available to the JVM.
         logger.info("Available processors (cores): " + Runtime.getRuntime().availableProcessors());
         // Total amount of free memory available to the JVM.
@@ -33,9 +65,5 @@ public class ScrapeDatWebsiteApp {
             logger.info("Free space (bytes): " + root.getFreeSpace());
             logger.info("Usable space (bytes): " + root.getUsableSpace());
         }
-
-        ScrapeView scrapeView = new ScrapeView();
-        new ScrapeButtonController(scrapeView);
-        new ScrapeMainView(scrapeView);
     }
 }

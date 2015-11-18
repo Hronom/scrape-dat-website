@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class ScrapeView extends JPanel {
+    private final String progressBarTextPrefix = "Working, please wait...";
+
     private final JLabel websiteUrlLabel;
     private final JTextField websiteUrlTextField;
     private final JLabel selectorLabel;
@@ -115,7 +117,7 @@ public class ScrapeView extends JPanel {
 
         {
             progressBar = new JProgressBar();
-            progressBar.setString("Working, please wait...");
+            progressBar.setString(progressBarTextPrefix);
             progressBar.setStringPainted(true);
             progressBar.setIndeterminate(true);
             progressBar.setVisible(false);
@@ -161,5 +163,9 @@ public class ScrapeView extends JPanel {
 
     public void setWorkInProgress(boolean working){
         progressBar.setVisible(working);
+    }
+
+    public void setProgressBarTaskText(String taskText) {
+        progressBar.setString(progressBarTextPrefix + " (" + taskText + ")");
     }
 }

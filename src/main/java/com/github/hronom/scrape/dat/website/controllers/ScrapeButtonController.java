@@ -53,6 +53,14 @@ public class ScrapeButtonController {
             public void actionPerformed(ActionEvent event) {
                 Executors.newSingleThreadExecutor().submit(new Runnable() {
                     public void run() {
+                        // Disable fields in view.
+                        scrapeView.setWebsiteUrlTextFieldEnabled(false);
+                        scrapeView.setSelectorTextFieldEnabled(false);
+                        scrapeView.setScrapeButtonEnabled(false);
+                        scrapeView.setWorkInProgress(true);
+                        scrapeView.setOutput("");
+
+                        scrapeView.setProgressBarTaskText("initializing");
                         logger.info("Start processing...");
                         long beginTime = System.currentTimeMillis();
 
@@ -64,36 +72,37 @@ public class ScrapeButtonController {
                                         scrapeView.getSelector() + "\"");
                         }
 
-                        // Disable fields in view.
-                        scrapeView.setWebsiteUrlTextFieldEnabled(false);
-                        scrapeView.setSelectorTextFieldEnabled(false);
-                        scrapeView.setScrapeButtonEnabled(false);
-                        scrapeView.setWorkInProgress(true);
-                        scrapeView.setOutput("");
-
                         // Process.
                         try {
                             URL url = new URL(scrapeView.getWebsiteUrl());
+                            scrapeView.setProgressBarTaskText("requesting page");
                             logger.info("Requesting page...");
                             HtmlPage page = webClient.getPage(url);
                             logger.info("Requesting of page completed.");
 
 
+                            scrapeView.setProgressBarTaskText("viewing page as XML");
                             logger.info("View page as XML");
                             String xml = page.asXml();
 
                             // Unescape html.
+                            scrapeView.setProgressBarTaskText("unescaping HTML");
                             logger.info("Unescape html");
                             xml = StringEscapeUtils.unescapeHtml4(xml);
 
                             logger.info("Get selector");
                             String selector = scrapeView.getSelector();
                             if (!xml.isEmpty() && !selector.isEmpty()) {
-                                logger.info("Parse XML");
+                                scrapeView.setProgressBarTaskText("parsing HTML");
+                                logger.info("Parse HTML");
                                 Document doc = Jsoup.parse(xml);
+
+                                scrapeView.setProgressBarTaskText("selecting elements in HTML");
+                                logger.info("select elements in HTML");
                                 Elements selectedElements = doc.select(selector);
 
                                 if (!selectedElements.isEmpty()) {
+                                    scrapeView.setProgressBarTaskText("parsing selected elements");
                                     logger.info("Parse extracted elements");
                                     StringBuilder sb = new StringBuilder();
                                     for (Element element : selectedElements) {
@@ -105,22 +114,22 @@ public class ScrapeButtonController {
                                     scrapeView.setOutput(sb.toString());
                                 }
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             logger.error(e);
                         }
 
                         logger.info("Close WebClient.");
                         webClient.close();
 
+                        long endTime = System.currentTimeMillis();
+                        logger.info("Process time: " + (endTime - beginTime) + " ms.");
+                        logger.info("Processing complete.");
+
                         // Enable fields in view.
                         scrapeView.setWorkInProgress(false);
                         scrapeView.setScrapeButtonEnabled(true);
                         scrapeView.setSelectorTextFieldEnabled(true);
                         scrapeView.setWebsiteUrlTextFieldEnabled(true);
-
-                        long endTime = System.currentTimeMillis();
-                        logger.info("Process time: " + (endTime - beginTime) + " ms.");
-                        logger.info("Processing complete.");
                     }
                 });
             }
