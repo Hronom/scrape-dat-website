@@ -115,7 +115,7 @@ public class ScrapeView extends JPanel {
 
         {
             progressBar = new JProgressBar();
-            progressBar.setString("Working...");
+            progressBar.setString("Working, please wait...");
             progressBar.setStringPainted(true);
             progressBar.setIndeterminate(true);
             progressBar.setVisible(false);
