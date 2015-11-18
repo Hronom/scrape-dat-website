@@ -53,6 +53,14 @@ public class ScrapeButtonController {
             public void actionPerformed(ActionEvent event) {
                 Executors.newSingleThreadExecutor().submit(new Runnable() {
                     public void run() {
+                        if (!scrapeView.getWebsiteUrl().isEmpty() &&
+                            !scrapeView.getSelector().isEmpty()) {
+                            logger.info("Input parameters: " +
+                                        scrapeView.getWebsiteUrl() + ", " +
+                                        scrapeView.getSelector());
+                        }
+                        long beginTime = System.currentTimeMillis();
+
                         scrapeView.setWebsiteUrlTextFieldEnabled(false);
                         scrapeView.setSelectorTextFieldEnabled(false);
                         scrapeView.setScrapeButtonEnabled(false);
@@ -95,6 +103,9 @@ public class ScrapeButtonController {
                         scrapeView.setScrapeButtonEnabled(true);
                         scrapeView.setSelectorTextFieldEnabled(true);
                         scrapeView.setWebsiteUrlTextFieldEnabled(true);
+
+                        long endTime = System.currentTimeMillis();
+                        logger.info("Process time: " + (endTime - beginTime) + " ms.");
                     }
                 });
             }
