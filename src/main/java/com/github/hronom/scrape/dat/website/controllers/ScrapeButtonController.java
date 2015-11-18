@@ -59,9 +59,9 @@ public class ScrapeButtonController {
                         // Output input parameters.
                         if (!scrapeView.getWebsiteUrl().isEmpty() &&
                             !scrapeView.getSelector().isEmpty()) {
-                            logger.info("Input parameters: " +
-                                        scrapeView.getWebsiteUrl() + ", " +
-                                        scrapeView.getSelector());
+                            logger.info("Input parameters: \"" +
+                                        scrapeView.getWebsiteUrl() + "\", \"" +
+                                        scrapeView.getSelector() + "\"");
                         }
 
                         // Disable fields in view.
