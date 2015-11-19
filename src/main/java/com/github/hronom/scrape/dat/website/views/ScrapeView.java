@@ -12,6 +12,7 @@ public class ScrapeView extends JPanel {
     private final JTextField websiteUrlTextField;
     private final JLabel selectorLabel;
     private final JTextField selectorTextField;
+    private final JCheckBox ui4jCheckBox;
     private final JButton scrapeButton;
     private final JTextArea outputTextArea;
     private final JProgressBar progressBar;
@@ -56,7 +57,7 @@ public class ScrapeView extends JPanel {
         }
 
         {
-            selectorLabel = new JLabel("Selector:");
+            selectorLabel = new JLabel("CSS Selector:");
 
             constraint.weightx = 0;
             constraint.weighty = 0;
@@ -82,12 +83,26 @@ public class ScrapeView extends JPanel {
         }
 
         {
-            scrapeButton = new JButton("Scrape website");
+            ui4jCheckBox = new JCheckBox("Use Ui4j for headless browser");
+            ui4jCheckBox.setSelected(false);
 
             constraint.weightx = 1;
             constraint.weighty = 0;
             constraint.gridx = 0;
             constraint.gridy = 2;
+            constraint.gridwidth = 2;
+            constraint.gridheight = 1;
+            constraint.fill = GridBagConstraints.BOTH;
+            this.add(ui4jCheckBox, constraint);
+        }
+
+        {
+            scrapeButton = new JButton("Scrape website");
+
+            constraint.weightx = 1;
+            constraint.weighty = 0;
+            constraint.gridx = 0;
+            constraint.gridy = 3;
             constraint.gridwidth = 2;
             constraint.gridheight = 1;
             constraint.fill = GridBagConstraints.BOTH;
@@ -108,7 +123,7 @@ public class ScrapeView extends JPanel {
             constraint.weightx = 1;
             constraint.weighty = 1;
             constraint.gridx = 0;
-            constraint.gridy = 3;
+            constraint.gridy = 4;
             constraint.gridwidth = 2;
             constraint.gridheight = 1;
             constraint.fill = GridBagConstraints.BOTH;
@@ -125,12 +140,16 @@ public class ScrapeView extends JPanel {
             constraint.weightx = 1;
             constraint.weighty = 0;
             constraint.gridx = 0;
-            constraint.gridy = 4;
+            constraint.gridy = 5;
             constraint.gridwidth = 2;
             constraint.gridheight = 1;
             constraint.fill = GridBagConstraints.BOTH;
             this.add(progressBar, constraint);
         }
+    }
+
+    public boolean isUi4jEnabled() {
+        return ui4jCheckBox.isSelected();
     }
 
     public void addScrapeButtonActionListener(ActionListener actionListener) {
@@ -161,7 +180,7 @@ public class ScrapeView extends JPanel {
         outputTextArea.setText(text);
     }
 
-    public void setWorkInProgress(boolean working){
+    public void setWorkInProgress(boolean working) {
         progressBar.setVisible(working);
     }
 
