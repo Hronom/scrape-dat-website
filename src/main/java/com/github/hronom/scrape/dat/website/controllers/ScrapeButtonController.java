@@ -9,7 +9,6 @@ import com.github.hronom.scrape.dat.website.views.ScrapeView;
 import com.ui4j.api.browser.BrowserEngine;
 import com.ui4j.api.browser.BrowserFactory;
 import com.ui4j.api.browser.Page;
-import com.ui4j.api.browser.PageConfiguration;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -179,15 +178,13 @@ public class ScrapeButtonController {
         // Navigate to blank page.
         scrapeView.setProgressBarTaskText("requesting page");
         logger.info("Requesting page...");
-        PageConfiguration pageConfig = new PageConfiguration();
-        Page page = browserEngine.navigate(scrapeView.getWebsiteUrl(), pageConfig);
+        Page page = browserEngine.navigate(scrapeView.getWebsiteUrl());
         //page.show();
         logger.info("Requesting of page completed.");
 
-        scrapeView.setProgressBarTaskText("viewing page as XML");
-        logger.info("View page as XML");
+        scrapeView.setProgressBarTaskText("viewing page as HTML");
+        logger.info("View page as HTML");
         String html = page.getDocument().getBody().getInnerHTML();
-        ;
 
         // Unescape html.
         scrapeView.setProgressBarTaskText("unescaping HTML");
