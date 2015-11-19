@@ -5,7 +5,7 @@
 
     <groupId>com.github.hronom</groupId>
     <artifactId>scrape-dat-website</artifactId>
-    <version>1.0.6</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>scrape-dat-website</name>
