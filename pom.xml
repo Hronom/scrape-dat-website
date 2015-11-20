@@ -28,7 +28,7 @@
     </repositories>
 
     <dependencies>
-        <!-- jxbrowser -->
+        <!-- JxBrowser -->
         <dependency>
             <groupId>com.teamdev</groupId>
             <artifactId>jxbrowser</artifactId>
