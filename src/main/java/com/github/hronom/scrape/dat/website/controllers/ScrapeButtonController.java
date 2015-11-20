@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.hronom.scrape.dat.website.views.ScrapeView;
+import com.teamdev.jxbrowser.chromium.Browser;
 import com.ui4j.api.browser.BrowserEngine;
 import com.ui4j.api.browser.BrowserFactory;
 import com.ui4j.api.browser.Page;
@@ -30,12 +31,13 @@ public class ScrapeButtonController {
 
     private final WebClient webClient;
     private final BrowserEngine browserEngine;
+    private final Browser browser;
 
     public ScrapeButtonController(ScrapeView scrapeViewArg) {
         scrapeView = scrapeViewArg;
         scrapeView.addScrapeButtonActionListener(createScrapeButtonActionListener());
 
-        // Create HTMLUnit WebClient.
+        // Create HtmlUnit WebClient.
         {
             webClient = new WebClient(BrowserVersion.FIREFOX_38);
             webClient.getOptions().setCssEnabled(true);
@@ -60,6 +62,30 @@ public class ScrapeButtonController {
         {
             browserEngine = BrowserFactory.getWebKit();
         }
+
+        // JxBrowser.
+        {
+            browser = new Browser();
+            //        BrowserView browserView = new BrowserView(browser);
+            //
+            //        JFrame frame = new JFrame();
+            //        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            //        frame.getContentPane().add(browserView, BorderLayout.CENTER);
+            //        frame.setSize(800, 600);
+            //        frame.setLocationRelativeTo(null);
+            //        frame.setVisible(true);
+            //
+            //        browser.addLoadListener(new LoadAdapter() {
+            //            @Override
+            //            public void onFinishLoadingFrame(FinishLoadingEvent event) {
+            //                if (event.isMainFrame()) {
+            //                    Browser browser = event.getBrowser();
+            //                    DOMDocument document = browser.getDocument();
+            //                    System.out.println("document = " + document);
+            //                }
+            //            }
+            //        });
+        }
     }
 
     public ActionListener createScrapeButtonActionListener() {
@@ -68,10 +94,20 @@ public class ScrapeButtonController {
             public void actionPerformed(ActionEvent event) {
                 Executors.newSingleThreadExecutor().submit(new Runnable() {
                     public void run() {
-                        if (scrapeView.isUi4jEnabled()) {
-                            processByUi4j();
-                        } else {
-                            processByHtmlUnit();
+                        String selectedBrowserEngine = scrapeView.getSelectedBrowserEngine();
+                        switch (selectedBrowserEngine) {
+                            case "HtmlUnit":
+                                processByHtmlUnit();
+                                break;
+                            case "Ui4j":
+                                processByUi4j();
+                                break;
+                            case "JxBrowser":
+                                processByJxBrowser();
+                                break;
+                            default:
+                                logger.error("Unknown browser engine: " + selectedBrowserEngine);
+                                break;
                         }
                     }
                 });
@@ -217,6 +253,86 @@ public class ScrapeButtonController {
         }
 
         browserEngine.clearCookies();
+
+        long endTime = System.currentTimeMillis();
+        logger.info("Process time: " + (endTime - beginTime) + " ms.");
+        logger.info("Processing complete.");
+
+        // Enable fields in view.
+        scrapeView.setWorkInProgress(false);
+        scrapeView.setScrapeButtonEnabled(true);
+        scrapeView.setSelectorTextFieldEnabled(true);
+        scrapeView.setWebsiteUrlTextFieldEnabled(true);
+    }
+
+    public void processByJxBrowser() {
+        // Disable fields in view.
+        scrapeView.setWebsiteUrlTextFieldEnabled(false);
+        scrapeView.setSelectorTextFieldEnabled(false);
+        scrapeView.setScrapeButtonEnabled(false);
+        scrapeView.setWorkInProgress(true);
+        scrapeView.setOutput("");
+
+        scrapeView.setProgressBarTaskText("initializing");
+        logger.info("Start processing...");
+        long beginTime = System.currentTimeMillis();
+
+        // Output input parameters.
+        if (!scrapeView.getWebsiteUrl().isEmpty() && !scrapeView.getSelector().isEmpty()) {
+            logger.info("Input parameters: \"" +
+                        scrapeView.getWebsiteUrl() + "\", \"" +
+                        scrapeView.getSelector() + "\", \"");
+        }
+
+        // Navigate to blank page.
+        scrapeView.setProgressBarTaskText("requesting page");
+        logger.info("Requesting page...");
+        browser.loadURL(scrapeView.getWebsiteUrl());
+        // Wait for loading.
+        while (browser.isLoading()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info("Requesting of page completed.");
+
+        scrapeView.setProgressBarTaskText("viewing page as HTML");
+        logger.info("View page as HTML");
+        String html = browser.getHTML();
+
+        // Unescape html.
+        scrapeView.setProgressBarTaskText("unescaping HTML");
+        logger.info("Unescape html");
+        html = StringEscapeUtils.unescapeHtml4(html);
+
+        logger.info("Get selector");
+        String selector = scrapeView.getSelector();
+        if (!html.isEmpty() && !selector.isEmpty()) {
+            scrapeView.setProgressBarTaskText("parsing HTML");
+            logger.info("Parse HTML");
+            Document doc = Jsoup.parse(html);
+
+            scrapeView.setProgressBarTaskText("selecting elements in HTML");
+            logger.info("select elements in HTML");
+            Elements selectedElements = doc.select(selector);
+
+            if (!selectedElements.isEmpty()) {
+                scrapeView.setProgressBarTaskText("parsing selected elements");
+                logger.info("Parse extracted elements");
+                StringBuilder sb = new StringBuilder();
+                for (Element element : selectedElements) {
+                    String body = element.html();
+                    sb.append(body);
+                    sb.append("\n");
+                    sb.append("\n");
+                }
+                scrapeView.setOutput(sb.toString());
+            }
+        }
+
+        browser.stop();
 
         long endTime = System.currentTimeMillis();
         logger.info("Process time: " + (endTime - beginTime) + " ms.");

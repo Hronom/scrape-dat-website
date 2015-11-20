@@ -5,7 +5,7 @@
 
     <groupId>com.github.hronom</groupId>
     <artifactId>scrape-dat-website</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>scrape-dat-website</name>
@@ -28,6 +28,38 @@
     </repositories>
 
     <dependencies>
+        <!-- jxbrowser -->
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>jxbrowser</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>jxbrowser-linux32</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>jxbrowser-linux64</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>jxbrowser-mac</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>jxbrowser-win</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.teamdev</groupId>
+            <artifactId>license</artifactId>
+            <version>6.0-beta</version>
+        </dependency>
+        <!-- commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
