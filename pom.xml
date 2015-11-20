@@ -256,9 +256,17 @@
                         <fileset>
                             <directory>${project.basedir}/bin</directory>
                             <includes>
+                                <include>*.exe</include>
                                 <include>*.jar</include>
                                 <include>lib/</include>
                                 <include>logs/</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>${project.basedir}/dist</directory>
+                            <includes>
+                                <include>*.*</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
