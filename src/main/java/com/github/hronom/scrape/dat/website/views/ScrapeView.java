@@ -12,7 +12,8 @@ public class ScrapeView extends JPanel {
     private final JTextField websiteUrlTextField;
     private final JLabel selectorLabel;
     private final JTextField selectorTextField;
-    private final JCheckBox ui4jCheckBox;
+    private final JLabel browserEngineLabel;
+    private final JComboBox<String> browserEngineComboBox;
     private final JButton scrapeButton;
     private final JTextArea outputTextArea;
     private final JProgressBar progressBar;
@@ -83,17 +84,31 @@ public class ScrapeView extends JPanel {
         }
 
         {
-            ui4jCheckBox = new JCheckBox("Use Ui4j for headless browser");
-            ui4jCheckBox.setSelected(false);
+            browserEngineLabel = new JLabel("Browser engine:");
 
-            constraint.weightx = 1;
+            constraint.weightx = 0;
             constraint.weighty = 0;
             constraint.gridx = 0;
             constraint.gridy = 2;
-            constraint.gridwidth = 2;
+            constraint.gridwidth = 1;
             constraint.gridheight = 1;
             constraint.fill = GridBagConstraints.BOTH;
-            this.add(ui4jCheckBox, constraint);
+            this.add(browserEngineLabel, constraint);
+        }
+
+        {
+            String[] values = new String[] {"HtmlUnit", "Ui4j", "JxBrowser"};
+            browserEngineComboBox = new JComboBox<>(values);
+            browserEngineComboBox.setSelectedIndex(2);
+
+            constraint.weightx = 1;
+            constraint.weighty = 0;
+            constraint.gridx = 1;
+            constraint.gridy = 2;
+            constraint.gridwidth = 1;
+            constraint.gridheight = 1;
+            constraint.fill = GridBagConstraints.BOTH;
+            this.add(browserEngineComboBox, constraint);
         }
 
         {
@@ -148,8 +163,8 @@ public class ScrapeView extends JPanel {
         }
     }
 
-    public boolean isUi4jEnabled() {
-        return ui4jCheckBox.isSelected();
+    public String getSelectedBrowserEngine() {
+        return (String) browserEngineComboBox.getSelectedItem();
     }
 
     public void addScrapeButtonActionListener(ActionListener actionListener) {
