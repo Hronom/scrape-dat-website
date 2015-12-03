@@ -65,6 +65,7 @@ public class ScrapeButtonController {
 
         // JxBrowser.
         {
+            System.setProperty("teamdev.license.info", "true");
             browser = new Browser();
             //        BrowserView browserView = new BrowserView(browser);
             //

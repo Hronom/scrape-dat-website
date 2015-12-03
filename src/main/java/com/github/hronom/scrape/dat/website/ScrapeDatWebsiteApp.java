@@ -46,6 +46,7 @@ public class ScrapeDatWebsiteApp {
         logger.info("OS version: " + System.getProperty("os.version"));
 
 
+
         // Total number of processors or cores available to the JVM.
         logger.info("Available processors (cores): " + Runtime.getRuntime().availableProcessors());
         // Total amount of free memory available to the JVM.
